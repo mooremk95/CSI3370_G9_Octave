@@ -44,8 +44,7 @@ public class OctaveView implements Observer {
      * @param q
      * @param playlists
      */
-    public OctaveView(Stage stage, OctaveController controller, 
-            Queue q,  ArrayList<Playlist> playlists) {
+    public OctaveView(Stage stage, OctaveController controller) {
         this.controller = controller;
         this.stage = stage;
         // Once Observer and Observable interfaces are written, the constructor

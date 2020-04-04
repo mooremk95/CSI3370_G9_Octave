@@ -33,38 +33,39 @@ import javafx.stage.Stage;
  * and a javafx MediaPlayer object called AudioStream.
  */
 public class Octave_Player extends Application {
+    private ArrayList<Playlist> playlists;
+    private Queue q;
+    private OctaveView mainView;
     
+    // Main method and javfx start method
     @Override
     public void start(Stage primaryStage) throws IOException { 
         primaryStage.setTitle("Octave Player");
         
-        Queue q = new Queue();
-        ArrayList<Playlist> playlists = getPlaylists();
-        OctaveController controller = new OctaveController();
-        
-        
-        // TODO: Write Observable and Observer Interfaces
-       
-        OctaveView mainView = new OctaveView(primaryStage, controller,
-                                            q, playlists);
+        OctaveController controller = new OctaveController(this);
+        mainView = new OctaveView(primaryStage, controller);
+        q = new Queue();
+        q.attach(mainView);
+        playlists = getPlaylists(mainView);        
 
     }
-    
-    
+   
     /**
      * @param args the command line arguments
-     * @throws IOException
+     * 
      */
     public static void main(String[] args) {
         launch(args);
     }
+    
+    // Driver class methods
     
       /**
      * @throws IOException
      * Searches the runtime directory for .opl files. This extension is used
      * by Octave player to denote XML files containing Playlist data.
      */
-    public ArrayList<Playlist> getPlaylists() throws IOException {
+    public ArrayList<Playlist> getPlaylists(OctaveView observer) throws IOException {
         ArrayList<Playlist> playlists = new ArrayList();
         File runtimeDir =  new File(".");
         // Filename filter is an interface. Create object implementing
@@ -76,9 +77,10 @@ public class Octave_Player extends Application {
         };
         
         if (runtimeDir.isDirectory()) {
+            // Fill up the playlist list with Playlist objects
             String[] fileNames = runtimeDir.list(filter);
             for (String fileName : fileNames){
-                playlists.add(new Playlist(fileName));
+                playlists.add(new Playlist(fileName, observer));
             }
         } else {
             throw new IOException("Somehow runtimeDir is not a directory. :(");
@@ -87,4 +89,15 @@ public class Octave_Player extends Application {
         return playlists;
     }
     
+    public OctaveView getView() {
+        return mainView;
+    }
+    
+    public ArrayList<Playlist> getPlaylists() {
+        return playlists;
+    }
+    
+    public Queue getQueue() {
+        return q;
+    }
 }

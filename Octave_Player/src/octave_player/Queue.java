@@ -10,6 +10,10 @@ import octave_player.Observable;
 import octave_player.Observer;
 
 import java.lang.String;
+
+//Containers
+import javafx.util.Pair;
+import java.util.ArrayList;
 import javafx.util.Pair; // Songs are pairs of strings
 
 /**

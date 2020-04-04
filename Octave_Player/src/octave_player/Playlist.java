@@ -9,6 +9,7 @@ package octave_player;
 import octave_player.Observable;
 import octave_player.Observer;
 import octave_player.OctaveView;
+import octave_player.PlaylistReader;
 
 //Containers
 import javafx.util.Pair;
@@ -31,9 +32,10 @@ public class Playlist implements Observable {
     ArrayList<Pair<String,String>> songList;
     OctaveView observer; 
     
-    public Playlist (String playlistPath) {
+    public Playlist (String playlistPath, OctaveView view) {
         // skeleton constructor
         name = playlistPath.replaceAll(".opl", "");
+        observer = view;
     }
     
     public String getName() {
