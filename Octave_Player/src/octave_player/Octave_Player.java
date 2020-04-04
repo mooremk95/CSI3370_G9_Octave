@@ -5,12 +5,24 @@
  */
 package octave_player;
 
+//IO
+import java.io.*;
+import java.util.Scanner;
+
+
+//Containers
+import java.util.ArrayList;
+
+// Octave classes
+import octave_player.OctaveView;
+import octave_player.OctaveController;
+import octave_player.Queue;
+import octave_player.Playlist;
+
+//JavaFX stuff
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import javafx.stage.Stage;
 
 /**
@@ -23,21 +35,56 @@ import javafx.stage.Stage;
 public class Octave_Player extends Application {
     
     @Override
-    public void start(Stage primaryStage) { 
-        StackPane root = new StackPane();
-        Scene scene = new Scene(root, 300, 250);
-        
+    public void start(Stage primaryStage) throws IOException { 
         primaryStage.setTitle("Octave Player");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        
+        Queue q = new Queue();
+        ArrayList<Playlist> playlists = getPlaylists();
+        OctaveController controller = new OctaveController();
+        
+        
+        // TODO: Write Observable and Observer Interfaces
+       
+        OctaveView mainView = new OctaveView(primaryStage, controller,
+                                            q, playlists);
+
     }
     
     
     /**
      * @param args the command line arguments
+     * @throws IOException
      */
     public static void main(String[] args) {
         launch(args);
+    }
+    
+      /**
+     * @throws IOException
+     * Searches the runtime directory for .opl files. This extension is used
+     * by Octave player to denote XML files containing Playlist data.
+     */
+    public ArrayList<Playlist> getPlaylists() throws IOException {
+        ArrayList<Playlist> playlists = new ArrayList();
+        File runtimeDir =  new File(".");
+        // Filename filter is an interface. Create object implementing
+        // interface to filter based on .opl extension
+        FilenameFilter filter = new FilenameFilter() {
+            public boolean accept (File directory, String filename) {
+                return filename.endsWith(".opl"); 
+            }
+        };
+        
+        if (runtimeDir.isDirectory()) {
+            String[] fileNames = runtimeDir.list(filter);
+            for (String fileName : fileNames){
+                playlists.add(new Playlist(fileName));
+            }
+        } else {
+            throw new IOException("Somehow runtimeDir is not a directory. :(");
+        }
+        
+        return playlists;
     }
     
 }

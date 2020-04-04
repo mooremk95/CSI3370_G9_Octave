@@ -5,7 +5,14 @@
  */
 package octave_player;
 
+// Octave imports
+import octave_player.Observable;
+import octave_player.Observer;
+import octave_player.OctaveView;
+
+//Containers
 import javafx.util.Pair;
+import java.util.ArrayList;
 
 
 /**
@@ -19,6 +26,36 @@ import javafx.util.Pair;
  * song title, the second being a path to the file location. The playlist's list
  * of songs is then appended to the queue to be played by Octave. 
  */
-public class Playlist {
+public class Playlist implements Observable {
+    String name;
+    ArrayList<Pair<String,String>> songList;
+    OctaveView observer; 
     
+    public Playlist (String playlistPath) {
+        // skeleton constructor
+        name = playlistPath.replaceAll(".opl", "");
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String toString() {
+        return getName();
+    }
+    
+    public void attach(Observer o) {
+        // 
+    }
+    
+    public void detach(Observer o) {
+        
+    }
+    
+    /**
+     * 
+     */
+    public void alert() {
+        
+    }
 }
