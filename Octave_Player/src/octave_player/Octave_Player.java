@@ -38,6 +38,7 @@ import javafx.stage.Stage;
  */
 public class Octave_Player extends Application {
     private ArrayList<Playlist> playlists;
+    private AudioStream as;
     private Queue q;
     private OctaveView mainView;
     
@@ -49,6 +50,7 @@ public class Octave_Player extends Application {
         OctaveController controller = new OctaveController(this);
         mainView = new OctaveView(primaryStage, controller);
         q = new Queue();
+	as = new AudioStream();
         q.attach(mainView);
         playlists = getPlaylists(mainView);        
 
@@ -92,7 +94,10 @@ public class Octave_Player extends Application {
         
         return playlists;
     }
-    
+    public void newStream(String fp)
+    {
+        as.newStream(fp);
+    }
     public OctaveView getView() {
         return mainView;
     }
