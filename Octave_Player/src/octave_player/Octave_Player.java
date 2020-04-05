@@ -39,17 +39,7 @@ public class Octave_Player extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-        PlaylistReader x = new PlaylistReader();
-        ArrayList<Song> songList = x.getPlaylist("samplePlaylist.xml");
-        if(songList == null)
-            System.out.println("it was null");
-        else{
-            for(int i = 0; i < songList.size(); i++)
-            {
-            System.out.println("name: " + songList.get(i).getName() + " filePath: " + songList.get(i).getFilePath());
-            }
-        }
-        System.out.println("YOU GOT TO THIS POINT");
+
     }
     
 }
