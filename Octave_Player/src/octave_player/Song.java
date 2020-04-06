@@ -36,5 +36,9 @@ public class Song {
     {
         filePath = newPath;
     }
+    
+    public String toString() {
+        return "Song| " + getName() + "\nLocation| " + getFilePath();
+    }
             
 }

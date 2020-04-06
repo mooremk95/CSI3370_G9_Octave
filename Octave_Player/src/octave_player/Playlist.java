@@ -10,6 +10,7 @@ import octave_player.Observable;
 import octave_player.Observer;
 import octave_player.OctaveView;
 import octave_player.PlaylistReader;
+import octave_player.Song;
 
 //Containers
 import javafx.util.Pair;
@@ -28,22 +29,28 @@ import java.util.ArrayList;
  * of songs is then appended to the queue to be played by Octave. 
  */
 public class Playlist implements Observable {
-    String name;
-    ArrayList<Pair<String,String>> songList;
-    OctaveView observer; 
+    final private String name, filePath;
+    private ArrayList<Song> songList = null;
+    private Observer observer; 
     
-    public Playlist (String playlistPath, OctaveView view) {
+    public Playlist (String playlistPath, Observer obs) {
         // skeleton constructor
         name = playlistPath.replaceAll(".opl", "");
-        observer = view;
+        filePath = playlistPath;
+        observer = obs;
+        obs.update(this);
     }
     
     public String getName() {
         return name;
     }
     
+    public String getFilePath() {
+        return filePath;
+    }
+    
     public String toString() {
-        return getName();
+        return "Playlist| " + getName() + "\nFilename| " + getFilePath();
     }
     
     public void attach(Observer o) {
@@ -57,7 +64,10 @@ public class Playlist implements Observable {
     /**
      * 
      */
+    @Override
     public void alert() {
-        
+        if (observer != null)
+            observer.update(this);
     }
+    
 }
