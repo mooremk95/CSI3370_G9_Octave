@@ -18,6 +18,7 @@ public class AudioStream implements Observable {
     private Media media;
     private MediaPlayer mp;
     private MediaView mv;
+    private Observer observer = null;
     public AudioStream()
     {
         mp = null;
@@ -33,17 +34,17 @@ public class AudioStream implements Observable {
     @Override
     public void attach(Observer o)
     {
-        
+        observer = o;
     }
     @Override
     public void detach(Observer o)
     {
-        
+        observer = null;
     }
     @Override
     public void alert()
     {
-        
+        observer.update(this);
     }
     public MediaPlayer getMediaPlayer()
     {

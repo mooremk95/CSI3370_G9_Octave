@@ -6,7 +6,7 @@
 package octave_player;
 
 
-
+import java.lang.RuntimeException;
 
 //IO
 import java.io.*;
@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 //Containers
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // Octave classes
 import octave_player.OctaveView;
@@ -23,7 +24,6 @@ import octave_player.Queue;
 import octave_player.Playlist;
 
 //JavaFX stuff
-
 import javafx.application.Application;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
@@ -42,6 +42,14 @@ public class Octave_Player extends Application {
     private Queue q;
     private OctaveView mainView;
     
+    // Filename filter is an interface. Create object implementing
+    // interface to filter based on .opl extension
+    final private FilenameFilter filter = new FilenameFilter() {
+            public boolean accept (File directory, String filename) {
+                return filename.endsWith(".opl"); 
+            }
+    };
+    
     // Main method and javfx start method
     @Override
     public void start(Stage primaryStage) throws IOException { 
@@ -52,8 +60,12 @@ public class Octave_Player extends Application {
         q = new Queue();
 	as = new AudioStream();
         q.attach(mainView);
-        playlists = getPlaylists(mainView);        
+        as.attach(mainView);
+        playlists = getPlaylists(mainView); // Playlists attached as created
 
+        // Testing createPlaylist
+        controller.playlistCreation();
+        System.out.println(playlists.get(playlists.size()-1));
     }
    
     /**
@@ -63,6 +75,8 @@ public class Octave_Player extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Playlist Stuff ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     // Driver class methods
     
@@ -74,14 +88,6 @@ public class Octave_Player extends Application {
     public ArrayList<Playlist> getPlaylists(OctaveView observer) throws IOException {
         ArrayList<Playlist> playlists = new ArrayList();
         File runtimeDir =  new File(".");
-        // Filename filter is an interface. Create object implementing
-        // interface to filter based on .opl extension
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept (File directory, String filename) {
-                return filename.endsWith(".opl"); 
-            }
-        };
-        
         if (runtimeDir.isDirectory()) {
             // Fill up the playlist list with Playlist objects
             String[] fileNames = runtimeDir.list(filter);
@@ -94,6 +100,40 @@ public class Octave_Player extends Application {
         
         return playlists;
     }
+    
+    public void createPlaylist(ArrayList<Song> songList, String name) throws IOException, RuntimeException {
+        // throw on empty argument errors
+        if (songList.isEmpty()) {
+            throw new RuntimeException("Songlist passed to CreatePlaylist was empty.");
+        } else if (name.isEmpty()) {
+            throw new RuntimeException("Playlist name passed to CreatePlaylist was the empty string.");
+        }
+        
+        try {
+            File playlist = new File(name+".opl");
+            if (playlist.createNewFile()) {
+                FileWriter writer = new FileWriter(name+".opl");
+                writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+                             "<playlist>");
+                for (Song song:songList) {
+                    writer.write("\n\t<song>\n\t\t<name>" + song.getName()+ 
+                                "</name>\n\t\t<location>" + song.getFilePath()+
+                                "</location>\n\t</song>");
+                }
+                writer.write("\n</playlist>");
+                writer.close();
+            } else {
+                // Call view and alert user of existing playlist
+                // ask for overwrite permission 
+            }
+            // Add as a new playlist to current Octave session
+            playlists.add(new Playlist(name+".opl",mainView));
+        } catch (IOException e) {
+            // call view, alert user name of their playlist is invalid (eg. contains \)
+        }
+    } 
+    
+    
     public void newStream(String fp)
     {
         as.newStream(fp);
