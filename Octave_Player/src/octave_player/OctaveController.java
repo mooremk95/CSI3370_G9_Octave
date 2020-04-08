@@ -47,4 +47,11 @@ public class OctaveController {
         driver.createPlaylist(songlist, playlistName);
         
     }
+    // Implemented as a simple test function to test deletePlaylist in 
+    // driver class
+    public void playlistDeletion() throws IOException {
+        String playlistName = "The Doors";
+        driver.deletePlaylist(playlistName);
+    }
+    
 }

@@ -34,15 +34,13 @@ import javafx.scene.media.MediaView;
  * and a queue viewer. 
  */
 public class OctaveView implements Observer {
-    Stage stage;
-    OctaveController controller;
+    private Stage stage;
+    private OctaveController controller;
     
     /**
      * 
      * @param stage
      * @param controller 
-     * @param q
-     * @param playlists
      */
     public OctaveView(Stage stage, OctaveController controller) {
         this.controller = controller;

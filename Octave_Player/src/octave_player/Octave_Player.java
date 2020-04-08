@@ -57,6 +57,9 @@ public class Octave_Player extends Application {
         
         OctaveController controller = new OctaveController(this);
         mainView = new OctaveView(primaryStage, controller);
+                
+                
+                
         q = new Queue();
 	as = new AudioStream();
         q.attach(mainView);
@@ -66,8 +69,10 @@ public class Octave_Player extends Application {
         // Testing createPlaylist
         controller.playlistCreation();
         System.out.println(playlists.get(playlists.size()-1));
+        controller.playlistDeletion();
+        System.out.println(playlists.get(playlists.size()-1));
     }
-   
+    
     /**
      * @param args the command line arguments
      * 
@@ -122,17 +127,31 @@ public class Octave_Player extends Application {
                 }
                 writer.write("\n</playlist>");
                 writer.close();
+                // Add as a new playlist to current Octave session
+                playlists.add(new Playlist(name+".opl",mainView));
             } else {
                 // Call view and alert user of existing playlist
                 // ask for overwrite permission 
             }
-            // Add as a new playlist to current Octave session
-            playlists.add(new Playlist(name+".opl",mainView));
         } catch (IOException e) {
             // call view, alert user name of their playlist is invalid (eg. contains \)
         }
     } 
     
+    public void deletePlaylist(String name) throws IOException {
+        File playlistFile = new File(name+".opl");
+        if (playlistFile.exists()) {
+            playlistFile.delete();
+            for (Playlist playlist : playlists) {
+                if (name.equals(playlist.getName())){
+                    playlists.remove(playlist);
+                    break;
+                }
+            }
+        } else {
+            // Call view, alert playlist to delete DNE
+        }
+    }
     
     public void newStream(String fp)
     {
