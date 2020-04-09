@@ -22,6 +22,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaView;
 
 
@@ -37,6 +45,23 @@ public class OctaveView implements Observer {
     private Stage stage;
     private OctaveController controller;
     
+    Image play = new Image("file:play.png");
+    Image pause = new Image("file:pause.png");
+    Image vol = new Image("file:volume.png");
+    Image forward = new Image("file:skipF.png");
+    Image previous = new Image("file:skipR.png");
+    Image stop = new Image("file:stop.png");
+    
+    ImageView iv = new ImageView(play);
+    ImageView iv2 = new ImageView(pause);
+    ImageView iv3 = new ImageView(vol);
+    ImageView iv4 = new ImageView(forward);
+    ImageView iv5 = new ImageView(previous);
+    ImageView iv6 = new ImageView(stop);
+    
+    
+    Button pl, pa, f, p, s;
+    Slider seek, v;
     /**
      * 
      * @param stage
@@ -49,12 +74,84 @@ public class OctaveView implements Observer {
         // will need to bind itself as an observer to each of the observables
         // Observables: The queue, and the playlists
         
+        //Skip Forward Button
+        f = new Button();
+        f.setGraphic(iv4);
+        iv4.setFitHeight(60);
+        iv4.setFitWidth(60);
+        
+        //Play Button
+        pl = new Button();
+        pl.setGraphic(iv);
+        iv.setFitHeight(60);
+        iv.setFitWidth(60);
+        
+        //Pause Button
+        pa = new Button();
+        pa.setGraphic(iv2);
+        iv2.setFitHeight(60);
+        iv2.setFitWidth(60);
+        
+        //Stop Button
+        s = new Button();
+        s.setGraphic(iv6);
+        iv6.setFitHeight(60);
+        iv6.setFitWidth(60);
+        
+        //Skip to Previous Button
+        p = new Button();
+        p.setGraphic(iv5);
+        iv5.setFitHeight(60);
+        iv5.setFitWidth(60);
+        
+        //Seek Slider
+        seek = new Slider();
+        seek.setMinWidth(500);
+        seek.setMinHeight(50);
+        HBox hs = new HBox(seek);
+        hs.setAlignment(Pos.CENTER);
+        
+        //Volume Slider
+        v = new Slider();
+        v.setMinWidth(70);
+        HBox hv = new HBox(iv3);
+        hv.getChildren().add(v);
+        hv.setAlignment(Pos.CENTER);
+        iv3.setFitHeight(50);
+        iv3.setFitWidth(50);
+        
+        //Empty Space for Row Spacing
+        HBox hb = new HBox();
+        hb.setMinHeight(5);
+        
+        HBox btn_bar = new HBox();
+        btn_bar.getChildren().addAll(p, pl, pa, s, f);
+        btn_bar.setAlignment(Pos.CENTER);
+        btn_bar.setSpacing(20);
+        
+        
+        //Empty Space for Column Spacing
+        VBox vb = new VBox();
+        vb.setMinWidth(100);
+        
         // Just some stuff Mike put in to test whether stages can be passed as
         // references. 
-        Label lbl1 = new Label("Octave");
-        GridPane pane = new GridPane();
-        pane.add(lbl1, 0, 0);
-        Scene mainScene = new Scene(pane,700,600);
+        GridPane gp = new GridPane();
+        gp.setStyle("-fx-background-color: grey");
+        gp.setAlignment(Pos.CENTER);
+        gp.setVgap(40);
+        gp.setHgap(5);
+        gp.addRow(0,hb);
+        gp.add(hv, 4, 1);
+        gp.add(btn_bar, 2, 1);
+        gp.addColumn(0, vb);
+        gp.add(hs, 2, 2);
+        
+        BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: lightgrey");
+        root.setBottom(gp);
+        
+        Scene mainScene = new Scene(root,1000,800);
         this.stage.setScene(mainScene);
         this.stage.show();
     }
