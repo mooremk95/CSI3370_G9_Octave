@@ -26,9 +26,9 @@ import octave_player.Playlist;
 //JavaFX stuff
 import javafx.application.Application;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
-
 /**
  *
  * @author Mike Moore, Trent Toyryla
@@ -58,19 +58,12 @@ public class Octave_Player extends Application {
         OctaveController controller = new OctaveController(this);
         mainView = new OctaveView(primaryStage, controller);
                 
-                
-                
         q = new Queue();
 	as = new AudioStream();
         q.attach(mainView);
         as.attach(mainView);
         playlists = getPlaylists(mainView); // Playlists attached as created
 
-        // Testing createPlaylist
-        controller.playlistCreation();
-        System.out.println(playlists.get(playlists.size()-1));
-        controller.playlistDeletion();
-        System.out.println(playlists.get(playlists.size()-1));
     }
     
     /**

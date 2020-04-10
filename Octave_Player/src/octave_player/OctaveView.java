@@ -11,6 +11,7 @@ import octave_player.Playlist;
 import octave_player.Queue;
 import octave_player.Observable;
 import octave_player.Observer;
+import octave_player.AudioStream;
 
 // Containers
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 
 
+
 /**
  *
  * @author Regina Fanelli 
@@ -49,6 +51,7 @@ import javafx.scene.text.Font;
 public class OctaveView implements Observer {
     private Stage stage;
     private OctaveController controller;
+    private MediaView mv = new MediaView();
     
     Image play = new Image("file:play.png");
     Image pause = new Image("file:pause.png");
@@ -185,6 +188,7 @@ public class OctaveView implements Observer {
         gp.addColumn(0, vb);
         gp.add(hs, 2, 2);
         
+        
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: lightgrey");
         root.setPadding(new Insets(20));
@@ -195,6 +199,7 @@ public class OctaveView implements Observer {
         Scene mainScene = new Scene(root,1000,800);
         this.stage.setScene(mainScene);
         this.stage.show();
+        
     }
     
     /**
@@ -202,6 +207,6 @@ public class OctaveView implements Observer {
      * @param o object implementing observable interface. This 
      */
     public void update(Observable o) {
-        //
+        // 
     }
 }
