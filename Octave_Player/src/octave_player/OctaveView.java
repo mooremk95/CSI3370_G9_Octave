@@ -33,7 +33,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 
-
+import java.util.Timer;
+import java.lang.InterruptedException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -48,6 +52,11 @@ public class OctaveView implements Observer {
     private OctaveController controller;
     private MediaView mv = new MediaView();
     private String playingSongName = "";
+    private boolean isPlaying = true;
+    // This clock runs when status is playing. Calls a method to progress the seek bar. 
+    private ExecutorService playingClock = Executors.newCachedThreadPool(); 
+    
+    Label current;
     
     Image play = new Image("file:play.png");
     Image pause = new Image("file:pause.png");
@@ -79,7 +88,7 @@ public class OctaveView implements Observer {
         // Observables: The queue, and the playlists
     
     /********************Currently Playing**********************/     
-        Label current = new Label("Now Playing:");
+        current = new Label("Now Playing:"); // changed this label to a data member so update can change it 
         current.setFont(new Font(25));
         
         HBox c = new HBox(current);
@@ -152,6 +161,9 @@ public class OctaveView implements Observer {
         seek.setMinHeight(50);
         HBox hs = new HBox(seek);
         hs.setAlignment(Pos.CENTER);
+        seek.setOnMouseReleased(e -> {
+            System.out.println("Seek Value: " + seek.getValue());
+        });
         
         //Volume Slider
         v = new Slider();
@@ -201,10 +213,41 @@ public class OctaveView implements Observer {
         root.setTop(c);
         root.setCenter(playlist);
         
+        // Set up the clock which increments the seeker
+        seek.setBlockIncrement(0.50);
+        playingClock.submit(() -> {
+                        while (true) {
+                            try{
+                                Thread.sleep(500);
+                                if (isPlaying)
+                                    seek.increment();
+                            } catch (InterruptedException e) {
+                                System.out.println("Exception in clock" + e);
+                            }
+                        }
+        });
+        // clean up the clock on shutdown
+        this.stage.setOnCloseRequest(e -> {
+            isPlaying = false;
+            playingClock.shutdown();
+        });
+        
+        
         Scene mainScene = new Scene(root,1000,800);
         this.stage.setScene(mainScene);
         this.stage.show();
-        
+    }
+    
+    /**
+     * 
+     * @param time 
+     * The Seeker's max value is set to the duration of the current song. This
+     * method allows a clock to increment the seeker forward at set time intervals. 
+     * The time argument is the duration of these intervals, so that the seeker 
+     * remains aligned with the AudioStream. 
+     */
+    public void incrementSeeker() {
+        seek.increment();
     }
     
     /**
@@ -212,13 +255,72 @@ public class OctaveView implements Observer {
      * @param o object implementing observable interface. This 
      */
     public void update(Observable o) {
-        // 
+        // Call appropriate update helper method based on object's class name
+        String type = o.getClass().getSimpleName();
+        switch (type) {
+            case "AudioStream":
+                audioStreamUpdate((AudioStream)o); 
+                break;
+            case "Queue":
+                queueUpdate((Queue)o);
+                break;
+            case "Playlist":
+                playlistUpdate((Playlist)o);
+        }
+       
     }
     /**
      * @param stream: reference to the stream which we are updating. 
      * - if Son
      */
-    private void audioStreamUpdate(Observable stream) {
-        
+    private void audioStreamUpdate(AudioStream stream){
+        MediaPlayer.Status status = stream.getStatus();
+        switch (status) {
+            case READY:
+                System.out.println("AudioStream is ready");
+                // oh, it's a new song
+                playingSongName = stream.getSongName();
+                current.setText("Now Playing " + playingSongName);
+                //move the playback slider to position 0 (min position)
+                seek.setValue(0.0);
+                // Set the max seek value to the number of seconds in the song
+                seek.setMax(stream.getSongDurationSeconds());
+                controller.setStatusPlay();
+                break;
+            case PLAYING:
+                System.out.println("AudioStream is playing");
+                if (stream.songEnded()) {
+                    isPlaying = false;
+                    controller.loadNextFromQueue();
+                } else {
+                    isPlaying = true;
+                }
+            case STALLED:
+                System.out.println("AudioStream is buffering.");
+                // Player is buffering. 
+                break;
+            case PAUSED:
+                System.out.println("AudioStream is paused");
+                isPlaying = false;
+                break;
+            case STOPPED:
+                System.out.println("AudioStream is stopped");
+                isPlaying = false;
+                seek.setValue(0.0);
+                break;
+            default:
+        }
+    }
+    
+    /**
+     * 
+     * @param q : Queue object which is alerting the view of an update 
+     */
+    private void queueUpdate(Queue q) {
+        System.out.println("Updating the view per new data from the queue");
+    }
+    
+    private void playlistUpdate(Playlist p) {
+        System.out.println("Updating the ");
     }
 }

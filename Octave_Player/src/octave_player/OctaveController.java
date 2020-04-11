@@ -38,6 +38,11 @@ public class OctaveController {
         driver = mainInstance;
     }
     
+    public void loadNextFromQueue() {
+        System.out.println("Loading next from the queue");
+        // if queue is not empty, load the next song. 
+    }
+    
     public void setStatusPlay() {
         AudioStream stream = driver.getStream();
         if (stream == null)

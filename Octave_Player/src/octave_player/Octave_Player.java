@@ -66,8 +66,8 @@ public class Octave_Player extends Application {
         // the player out. 
         Song s = new Song("Riders on the Storm",
                           "C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1971 - L.A.Woman\\The Doors - Riders On The Storm.MP3");
+        as.loadSong(s); // Normally controller would call this when loading the next song in loadNextFromQueue()
         as.setVolume(0.66); // volume on program startup is 66/
-        as.loadFromQueue(s);
     }
     
     /**
@@ -84,6 +84,7 @@ public class Octave_Player extends Application {
     
       /**
      * @throws IOException
+     * @return ArrayList of Playlist objects
      * Searches the runtime directory for .opl files. This extension is used
      * by Octave player to denote XML files containing Playlist data.
      */

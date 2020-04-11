@@ -9,6 +9,8 @@ import java.io.File;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import java.lang.Runnable;
+
 
 /**
  *
@@ -34,34 +36,48 @@ public class AudioStream implements Observable {
      */
     private boolean newStream(String fp)
     {
-        try{
-            String uriString = new File(fp).toURI().toString();
-            media = new Media(uriString);
-            mp = new MediaPlayer(media);
-            if (media.getError() == null && mp.getError() == null) {
-                alert();
-                return true;
-            }
-            media = null;
-            mp = null;
-            return false;
-        } catch (Exception e) {
-            System.out.println(e);
-            media = null;
-            return false;
+        double currentVolume = 0.0;
+        if (mp != null)
+            currentVolume = mp.getVolume();
+        String uriString = new File(fp).toURI().toString(); 
+        media = new Media(uriString);
+        mp = new MediaPlayer(media);
+        // if mediaPlayer and media are clear of errors, continue
+        if (media.getError() == null && mp.getError() == null) {
+            mp.setVolume(currentVolume);
+            // set alert as callback when mediaPlayer changes state
+            mp.setOnReady(() -> { alert(); });
+            mp.setOnPlaying(() -> { alert(); });
+            mp.setOnPaused(() -> { alert(); });
+            mp.setOnStopped(() -> { alert(); });
+            mp.setOnStalled(() -> { alert(); });
+            mp.setOnHalted(() -> { alert(); });
+            mp.setOnEndOfMedia(() -> { 
+                System.out.println("\nEnd of Media status: " + mp.getStatus() 
+                        + "\nPlayback Time:" +mp.getCurrentTime() 
+                        + "\nDuration: " + mp.getCycleDuration());
+                alert(); });
+            return true;
         }
+        // othwrwise set them to null, return false
+        media = null;
+        mp = null;
+        return false;
     }
     /**
      * 
      * @param song :  Song to be loaded from the queue
      */
-    public void loadFromQueue(Song song) {
+    public void loadSong(Song song) {
         if (newStream(song.getFilePath())) {
-            mp.play();
+            songName = song.getName();
+            //alert();
+            //mp.play();
+            
         } else {
-            // alert with null mediaplayer implies failure to load song from queue 
-            alert();
+            alert(); // alert with null mediaplayer implies failure to load song from queue 
         }
+        
     }
     // Observable interface methods
     @Override
@@ -77,10 +93,16 @@ public class AudioStream implements Observable {
     @Override
     public void alert()
     {
-        //observer.update(this);
+        observer.update(this);
     }
     
-    // Methods allowing controller to modify the stream
+    public boolean songEnded() {
+        if (mp != null)
+            return mp.getCurrentTime() == mp.getCycleDuration();
+        return false;
+    }
+    
+    // Methods allowing controller to modify the stream (Setters)
     public void play()
     {
         if (mp != null && mp.getStatus() != MediaPlayer.Status.PLAYING)
@@ -156,8 +178,17 @@ public class AudioStream implements Observable {
      * 
      * @return runtime of the current song in seconds
      */
-    public double getSongtimeSeconds() {
+    public double getSongDurationSeconds() {
         return media.getDuration().toSeconds();
+    }
+    /**
+     *  @return double current playback time of the mediaPlayer in seconds
+     */
+    public double getPlaybacktime() {
+        if (mp != null){
+            return mp.getCurrentTime().toSeconds();
+        }
+        return -1.0;
     }
     /**
      * 
@@ -168,9 +199,12 @@ public class AudioStream implements Observable {
      *  - stalled
      *  - stopped
      *  - halting
+     *  - null on an uninitialized player
      */
     public MediaPlayer.Status getStatus() {
-        return mp.getStatus();
+        if (mp != null)
+            return mp.getStatus();
+        else
+            return null;
     }
-
 }
