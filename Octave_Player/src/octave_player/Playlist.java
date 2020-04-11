@@ -38,7 +38,7 @@ public class Playlist implements Observable {
         name = playlistPath.replaceAll(".opl", "");
         filePath = playlistPath;
         observer = obs;
-        obs.update(this);
+        alert();
     }
     
     public String getName() {

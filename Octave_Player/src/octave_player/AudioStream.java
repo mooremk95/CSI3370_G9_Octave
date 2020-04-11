@@ -8,8 +8,7 @@ package octave_player;
 import java.io.File;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import octave_player.Song;
-import java.net.URISyntaxException;
+import javafx.util.Duration;
 
 /**
  *
@@ -22,28 +21,49 @@ public class AudioStream implements Observable {
     // May need this, but for now let's true to use the GUI Regina created
     //private MediaView mv = null;
     private Observer observer = null;
-    public AudioStream()
+    private String songName = null;
+    
+    public AudioStream(Observer o)
     {
-        mp = null;
+        observer = o;
     }
     /**
      * 
      * @param fp : string to be converted to a URI for the current song 
+     * Returns true if the new stream is created successfully, false otherwise.
      */
-    public void newStream(String fp)
+    private boolean newStream(String fp)
     {
         try{
             String uriString = new File(fp).toURI().toString();
             media = new Media(uriString);
+            mp = new MediaPlayer(media);
+            if (media.getError() == null && mp.getError() == null) {
+                alert();
+                return true;
+            }
+            media = null;
+            mp = null;
+            return false;
         } catch (Exception e) {
             System.out.println(e);
+            media = null;
+            return false;
         }
-        mp = new MediaPlayer(media);
-        mp.play();
-        
-        alert();
     }
-    
+    /**
+     * 
+     * @param song :  Song to be loaded from the queue
+     */
+    public void loadFromQueue(Song song) {
+        if (newStream(song.getFilePath())) {
+            mp.play();
+        } else {
+            // alert with null mediaplayer implies failure to load song from queue 
+            alert();
+        }
+    }
+    // Observable interface methods
     @Override
     public void attach(Observer o)
     {
@@ -59,23 +79,17 @@ public class AudioStream implements Observable {
     {
         //observer.update(this);
     }
-    public MediaPlayer getMediaPlayer()
-    {
-        return mp;
-    }
     
-    // Methods allowing controller to modofy the stream
+    // Methods allowing controller to modify the stream
     public void play()
     {
-        if (mp != null){
+        if (mp != null && mp.getStatus() != MediaPlayer.Status.PLAYING)
             mp.play();
-        }
     }
     public void pause()
     {
-        if (mp != null) {
+        if (mp != null && mp.getStatus() == MediaPlayer.Status.PLAYING) 
             mp.pause();
-        }
     }
     
     /**
@@ -83,7 +97,8 @@ public class AudioStream implements Observable {
      * a paused state. 
      */
     public void stop() {
-        mp.stop();
+        if (mp.getStatus() == MediaPlayer.Status.PLAYING)
+            mp.stop();
     }
     /**
      * Toggles mute. Switches the mute state of the player on/off
@@ -108,9 +123,50 @@ public class AudioStream implements Observable {
             mp.setVolume(value);
         // no nedd to alert 
     }
-
+    
     /**
-     * Change the media stream to the song provided
-     * @param s 
+     * @param time: Double, the time to seek to in the song
      */
+    public void setPlayback(double time) { 
+        // Don't change seek time if argument passed is negative 
+        if (Double.compare(time, 0.0) < 0)
+            return;
+        Duration seekTime = new Duration(time);
+        // Similarly, don't change seek time if time passed is beyond song duration
+        if (media.getDuration().compareTo(seekTime) > 1)
+            return;
+        mp.seek(seekTime);
+    }
+    
+    // Getters
+    /**
+    * 
+    *  @return a media player reference. Needed to view to 
+    */
+    public MediaPlayer getMediaPlayer()
+    {
+        return mp;
+    }
+    
+    /**
+     * 
+     * @return runtime of the current song in seconds
+     */
+    public double getSongtimeSeconds() {
+        return media.getDuration().toSeconds();
+    }
+    /**
+     * 
+     * @return Status of the audioStream as a mediaPlayer status. May be:
+     *  - ready
+     *  - paused
+     *  - playing
+     *  - stalled
+     *  - stopped
+     *  - halting
+     */
+    public MediaPlayer.Status getStatus() {
+        return mp.getStatus();
+    }
+
 }

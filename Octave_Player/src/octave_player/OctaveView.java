@@ -5,13 +5,6 @@
  */
 package octave_player;
 
-// Octave imports
-import octave_player.OctaveController;
-import octave_player.Playlist;
-import octave_player.Queue;
-import octave_player.Observable;
-import octave_player.Observer;
-import octave_player.AudioStream;
 
 // Containers
 import java.util.ArrayList;
