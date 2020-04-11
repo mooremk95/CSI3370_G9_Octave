@@ -25,20 +25,23 @@ import javafx.util.Pair; // Songs are pairs of strings
  * and case he second being a string of it's file path. 
  */
 public class Queue implements Observable {
+    private Observer observer = null;
     
-    public Queue() {
-        
+    
+    public Queue(Observer o) {
+        attach(o);
     }
     
     public void attach(Observer o) {
-        // 
+        observer = o;
     }
     
     public void detach(Observer o) {
-        
+        observer = null;
     }
     
     public void alert() {
-        
+        if (observer != null)
+            observer.update(this);
     }
 }
