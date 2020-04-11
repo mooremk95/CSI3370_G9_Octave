@@ -49,6 +49,11 @@ public class Playlist implements Observable {
         return songList;     
     }
     
+    public ArrayList<Song> getSongList()
+    {
+        return songList;
+    }
+    
     public String getName() {
         return name;
     }
