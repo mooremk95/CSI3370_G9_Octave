@@ -58,8 +58,8 @@ public class Octave_Player extends Application {
         OctaveController controller = new OctaveController(this);
         mainView = new OctaveView(primaryStage, controller);
                 
-        q = new Queue(mainView);
-	as = new AudioStream(mainView);
+        q = new Queue();
+	as = new AudioStream();
         q.attach(mainView);
         as.attach(mainView);
         playlists = getPlaylists(mainView); // Playlists attached as created
@@ -146,6 +146,10 @@ public class Octave_Player extends Application {
         }
     }
     
+    public void newStream(String fp)
+    {
+        as.newStream(fp);
+    }
     public OctaveView getView() {
         return mainView;
     }
