@@ -17,6 +17,9 @@ import java.lang.String;
 // Containers
 import java.util.ArrayList;
 
+// javafx imports 
+import javafx.scene.media.MediaPlayer;
+
 /**
  *
  * @author Kyle Sienkiewicz, Emily Locke
@@ -35,23 +38,96 @@ public class OctaveController {
         driver = mainInstance;
     }
     
-    // Implemented as a simple test function to test createPlaylist in 
-    // driver class
-    public void playlistCreation() throws IOException {
-        ArrayList<Song> songlist = new ArrayList<Song>();  
-        songlist.add(new Song("Break On Through","C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1967 - The Doors\\The Doors - Break On Through.MP3"));
-        songlist.add(new Song("The End","C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1967 - The Doors\\The Doors - The End.MP3"));
-        songlist.add(new Song("La Woman","C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1971 - L.A.Woman\\The Doors - La Woman.MP3"));
-        songlist.add(new Song("Riders On The Storm","C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1971 - L.A.Woman\\The Doors - Riders On The Storm.MP3"));
-        String playlistName = "The Doors";
-        driver.createPlaylist(songlist, playlistName);
+    public void setStatusPlay() {
+        AudioStream stream = driver.getStream();
+        if (stream == null)
+            return; 
+        switch (stream.getStatus()) {
+            case PAUSED:
+            case STOPPED:
+            case READY:
+                stream.play();
+                break;
+            case STALLED:
+            case PLAYING:
+                // stream buffering. If we had more time, we could implement a 
+                // sleep, and then retry, or we could alert user media is buffering
+                return;
+            default:
+                // in this case stream is halted, disposed, or unknown state
+                // best to alert view so it can alert user and 
+                //create a new stream can be created
+                stream.alert();
+        }
+    }
+    public void setStatusPaused() {
+        AudioStream stream = driver.getStream();
+        if (stream == null)
+            return;
+        switch (stream.getStatus()) {
+            case PLAYING:
+                stream.pause();
+                return; 
+            case PAUSED:
+            case STOPPED:
+            case READY:
+            case STALLED:
+                // stream already in a "paused" like state
+                return;
+            default:
+                // in this case stream is halted, disposed, or unknown state
+                // best to alert view so it can alert user and 
+                //create a new stream can be created
+                stream.alert();
+        }
+    }
+    /**
+     * Attempts to set the status of the AudioStream to stopped, pausing the 
+     * song and setting it's playback to time 0. If the stream is in a failed
+     * state (Halted, unknown, disposed), then alert if fired so view may 
+     * alert the user and the stream can update its mediaPlayer/media. 
+     */
+    public void setStatusStopped() {
+        AudioStream stream = driver.getStream();
+        if (stream == null)
+            return;
+        switch (stream.getStatus()) {
+            case PLAYING:
+            case PAUSED:
+            case STALLED:
+                stream.stop();
+                return; 
+            case STOPPED:
+            case READY:
+                // stream already in a "stopped" like state (paused at start)
+                return;
+            default:
+                // in this case stream is halted, disposed, or unknown state
+                // best to alert view so it can alert user and 
+                //create a new stream can be created
+                stream.alert();
+        }
+    }
+    /**
+     * @param volumePercent
+     */
+    public void setVolume(double volumePercent) {
+        AudioStream stream = driver.getStream();
+        if (stream == null)
+            return;
+        stream.setVolume(volumePercent/100.0);
+        System.out.println("Volume set to:" + (int)(volumePercent)+"%");
+    }
+    
+    /**
+     * 
+     * @param seekTime: Time that the user scrolled the playback slider to. 
+     * The Value 
+     */
+    public void seekSong(double percentOfSongBar) {
         
-    }
-    // Implemented as a simple test function to test deletePlaylist in 
-    // driver class
-    public void playlistDeletion() throws IOException {
-        String playlistName = "The Doors";
-        driver.deletePlaylist(playlistName);
-    }
+    }   
+
+    // N
     
 }

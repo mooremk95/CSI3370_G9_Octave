@@ -60,10 +60,14 @@ public class Octave_Player extends Application {
                 
         q = new Queue(mainView);
 	as = new AudioStream(mainView);
-        q.attach(mainView);
-        as.attach(mainView);
-        playlists = getPlaylists(mainView); // Playlists attached as created
-
+        playlists = getPlaylists(mainView); 
+        
+        // Replace the songName and file path strings with your own to test
+        // the player out. 
+        Song s = new Song("Riders on the Storm",
+                          "C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1971 - L.A.Woman\\The Doors - Riders On The Storm.MP3");
+        as.setVolume(0.66); // volume on program startup is 66/
+        as.loadFromQueue(s);
     }
     
     /**
@@ -146,6 +150,7 @@ public class Octave_Player extends Application {
         }
     }
     
+    // getters
     public OctaveView getView() {
         return mainView;
     }
@@ -156,5 +161,9 @@ public class Octave_Player extends Application {
     
     public Queue getQueue() {
         return q;
+    }
+    
+    public AudioStream getStream() {
+        return as;
     }
 }

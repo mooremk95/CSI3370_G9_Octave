@@ -8,7 +8,9 @@ package octave_player;
 
 // Containers
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //JavaFX imports
 import javafx.scene.layout.GridPane;
@@ -45,6 +47,7 @@ public class OctaveView implements Observer {
     private Stage stage;
     private OctaveController controller;
     private MediaView mv = new MediaView();
+    private String playingSongName = "";
     
     Image play = new Image("file:play.png");
     Image pause = new Image("file:pause.png");
@@ -105,7 +108,7 @@ public class OctaveView implements Observer {
         iv.setFitWidth(60);
         
         pl.setOnAction(e -> {
-            
+            controller.setStatusPlay();
         });
         
         //Pause Button
@@ -115,7 +118,7 @@ public class OctaveView implements Observer {
         iv2.setFitWidth(60);
         
         pa.setOnAction(e -> {
-            
+            controller.setStatusPaused();
         });
         
         //Stop Button
@@ -125,9 +128,12 @@ public class OctaveView implements Observer {
         iv6.setFitWidth(60);
         
         s.setOnAction(e -> {
-            
+            controller.setStatusStopped();
         });
         
+        // Note: Not sure we can implement this feature
+        // Queue class is designed to funciton as a true queue, and songs are 
+        // removed once they have been played or skipped
         //Skip to Previous Button
         p = new Button();
         p.setGraphic(iv5);
@@ -137,6 +143,8 @@ public class OctaveView implements Observer {
         p.setOnAction(e -> {
             
         });
+        
+        
         
         //Seek Slider
         seek = new Slider();
@@ -153,6 +161,11 @@ public class OctaveView implements Observer {
         hv.setAlignment(Pos.CENTER);
         iv3.setFitHeight(50);
         iv3.setFitWidth(50);
+        v.setValue(66.0); // volume on program startup is 66%
+        v.setOnMouseReleased(e -> {
+            //System.out.println("Hello! Can you hear me?");
+            controller.setVolume(v.getValue());
+        });
         
         //Empty Space for Row Spacing
         HBox hb = new HBox();
@@ -168,8 +181,7 @@ public class OctaveView implements Observer {
         VBox vb = new VBox();
         vb.setMinWidth(100);
         
-        // Just some stuff Mike put in to test whether stages can be passed as
-        // references. 
+
         GridPane gp = new GridPane();
         gp.setStyle("-fx-background-color: grey");
         gp.setAlignment(Pos.CENTER);
@@ -201,5 +213,12 @@ public class OctaveView implements Observer {
      */
     public void update(Observable o) {
         // 
+    }
+    /**
+     * @param stream: reference to the stream which we are updating. 
+     * - if Son
+     */
+    private void audioStreamUpdate(Observable stream) {
+        
     }
 }
