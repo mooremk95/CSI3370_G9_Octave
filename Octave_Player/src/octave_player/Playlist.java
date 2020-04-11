@@ -30,15 +30,23 @@ import java.util.ArrayList;
  */
 public class Playlist implements Observable {
     final private String name, filePath;
-    private ArrayList<Song> songList = null;
-    private Observer observer; 
+    private ArrayList<Song> songList;
+    private ArrayList<Observer> observerList = new ArrayList<Observer>(); 
     
     public Playlist (String playlistPath, Observer obs) {
         // skeleton constructor
         name = playlistPath.replaceAll(".opl", "");
         filePath = playlistPath;
-        observer = obs;
+        observerList.add(obs);
         alert();
+    }
+    
+    public ArrayList<Song> readPlaylist()
+    {
+        PlaylistReader read = new PlaylistReader();
+        songList = read.getPlaylist(filePath);
+        alert();
+        return songList;     
     }
     
     public String getName() {
@@ -54,7 +62,7 @@ public class Playlist implements Observable {
     }
     
     public void attach(Observer o) {
-        // 
+        observerList.add(o);
     }
     
     public void detach(Observer o) {
@@ -66,8 +74,12 @@ public class Playlist implements Observable {
      */
     @Override
     public void alert() {
-        if (observer != null)
-            observer.update(this);
+       for(int i = 0; i < observerList.size(); i++) 
+       {
+           if (observerList.get(i) != null){
+                observerList.get(i).update(this);
+           }
+       }
     }
     
 }

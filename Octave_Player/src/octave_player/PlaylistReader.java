@@ -45,7 +45,7 @@ import javax.xml.parsers.*;
  */
 public class PlaylistReader {
     
-    private String file;
+    
     
     public PlaylistReader(){
     }
