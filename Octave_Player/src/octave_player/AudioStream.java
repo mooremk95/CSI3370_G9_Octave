@@ -97,13 +97,17 @@ public class AudioStream implements Observable {
      * a paused state. 
      */
     public void stop() {
-        if (mp.getStatus() == MediaPlayer.Status.PLAYING)
+        if (mp != null){
             mp.stop();
+        }
+            
     }
     /**
      * Toggles mute. Switches the mute state of the player on/off
      */
     public void toggleMute() {
+        if (mp == null)
+            return;
         if (mp.isMute()){
             mp.setMute(false);
         }
@@ -117,6 +121,8 @@ public class AudioStream implements Observable {
      * adjusted. Otherwise it remains set to it's previous Value.
      */
     public void setVolume(double value) {
+        if (mp == null)
+            return;
         int overMaxVol = Double.compare(value, 1.0);
         int underMinVol = Double.compare(value,0.0);
         if (overMaxVol < 1 && underMinVol >= 0)
@@ -139,15 +145,13 @@ public class AudioStream implements Observable {
     }
     
     // Getters
-    /**
-    * 
-    *  @return a media player reference. Needed to view to 
-    */
-    public MediaPlayer getMediaPlayer()
-    {
-        return mp;
-    }
     
+    /**
+     * @return songName
+     */
+    public String getSongName() {
+        return songName;
+    }
     /**
      * 
      * @return runtime of the current song in seconds
