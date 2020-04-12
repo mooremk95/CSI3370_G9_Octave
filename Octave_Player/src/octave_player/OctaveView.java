@@ -8,9 +8,7 @@ package octave_player;
 
 // Containers
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 
 //JavaFX imports
 import javafx.scene.layout.GridPane;
@@ -29,18 +27,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaView;
 import javafx.geometry.Insets;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 
-import java.util.Timer;
-import java.lang.InterruptedException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javafx.event.EventType;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
+
 
 /**
  *
@@ -51,9 +43,9 @@ import javafx.scene.layout.Border;
  * and a queue viewer. 
  */
 public class OctaveView implements Observer {
-    private Stage stage;
-    private OctaveController controller;
-    private MediaView mv = new MediaView();
+    final private Stage stage;
+    final private OctaveController controller;
+    final private MediaView mv = new MediaView();
     private String playingSongName = "";
     private String lastPlaylist;
     private ArrayList<Label> playlistSongs = new ArrayList<>(); // Contains the songs in the selected playlist
@@ -335,7 +327,6 @@ public class OctaveView implements Observer {
     
     /**
      * @param stream: reference to the stream which we are updating. 
-     * - if Son
      */
     private void audioStreamUpdate(AudioStream stream){
         if (stream.getStatus() == null){

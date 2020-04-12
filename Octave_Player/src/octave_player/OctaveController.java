@@ -83,10 +83,15 @@ public class OctaveController {
         AudioStream stream = driver.getStream();
         if (stream == null)
             return; 
+        else if (stream.getStatus() == null){
+            loadNextFromQueue();
+            driver.getStream().setVolume(0.66);
+        }
         switch (stream.getStatus()) {
             case PAUSED:
             case STOPPED:
             case READY:
+                
                 stream.play();
                 break;
             case STALLED:

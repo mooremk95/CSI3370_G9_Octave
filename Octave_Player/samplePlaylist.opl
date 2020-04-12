@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist>
+	<song>
+		<name>Musway Studio - Ambient Background</name>
+		<location>.\Musway Studio Ambient Background.mp3</location>
+	</song>
+	<song>
+		<name>Musway Studio - Ambient Movement</name>
+		<location>.\Musway Studio Ambient Movement.mp3</location>
+	</song>
+</playlist>

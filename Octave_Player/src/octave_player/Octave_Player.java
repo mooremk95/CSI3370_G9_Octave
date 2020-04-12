@@ -18,17 +18,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 // Octave classes
-import octave_player.OctaveView;
-import octave_player.OctaveController;
-import octave_player.Queue;
-import octave_player.Playlist;
+
 
 //JavaFX stuff
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.scene.media.Media;
 import javafx.stage.Stage;
 /**
  *
@@ -65,11 +58,14 @@ public class Octave_Player extends Application {
         playlists = getPlaylists(mainView); 
         // Replace the songName and file path strings with your own to test
         // the player out. 
-
-        Song s = new Song("You Shook Me All Night Long", "C:\\Users\\NVala\\Desktop\\countrySong.mp3");
-        q.addToQueue(s);
-        as.loadSong(s);// Normally controller would call this when loading the next song in loadNextFromQueue()
-        as.setVolume(0.66); // volume on program startup is 66/
+        
+        Playlist sample = searchPlaylists("samplePlaylist");
+        sample.readPlaylist().forEach((song) -> {
+            q.addToQueue(song);
+        });
+        
+        
+        
     }
     
     /**
@@ -85,6 +81,7 @@ public class Octave_Player extends Application {
     // Driver class methods
     
       /**
+     * @param observer
      * @throws IOException
      * @return ArrayList of Playlist objects
      * Searches the runtime directory for .opl files. This extension is used
@@ -100,7 +97,7 @@ public class Octave_Player extends Application {
                 playlists.add(new Playlist(fileName, observer));
             }
         } else {
-            throw new IOException("Somehow runtimeDir is not a directory. :(");
+            throw new IOException("Failed to open runtime Directory");
         }
         
         return playlists;
