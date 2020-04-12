@@ -55,8 +55,8 @@ public class OctaveView implements Observer {
     private MediaView mv = new MediaView();
     private String playingSongName = "";
     private String lastPlaylist;
-    private ArrayList<Label> playlists;
-    private ArrayList<Label> playlistSongs; // Contains the songs in the selected playlist
+    private ArrayList<Label> playlists = new ArrayList<>();
+    private ArrayList<Label> playlistSongs = new ArrayList<>(); // Contains the songs in the selected playlist
     private boolean isPlaying = false;
     // This clock runs when status is playing. Calls a method to progress the seek bar. 
     private ExecutorService playingClock = Executors.newCachedThreadPool(); 
@@ -77,9 +77,9 @@ public class OctaveView implements Observer {
     ImageView iv5 = new ImageView(previous);
     ImageView iv6 = new ImageView(stop);
     
-    StackPane queuelist = new StackPane();
-    StackPane playlist = new StackPane();
-    StackPane songlist = new StackPane();
+    VBox queueBox = new VBox();
+    VBox playlistBox = new VBox();
+    VBox PlaylistSongsBox = new VBox();
     
     
     Button pl, pa, f, p, s;
@@ -108,45 +108,45 @@ public class OctaveView implements Observer {
         Label queuel = new Label("Queue");
         queuel.setFont(new Font(20));
         queuel.setPadding(new Insets(5,0,0,0));
-        VBox list1 = new VBox(queuel, queuelist);
+        VBox list1 = new VBox(queuel, queueBox);
         list1.setStyle("-fx-border-color: black");
         list1.setStyle("-fx-border-insets: 5");
         list1.setStyle("-fx-border-width: 2");
         list1.setStyle("-fx-border-style: solid inside");
         list1.setMinSize(166, 460);
         list1.setAlignment(Pos.CENTER);
-        queuelist.setAlignment(Pos.CENTER);
-        queuelist.setPrefSize(300, 460);
+        queueBox.setAlignment(Pos.TOP_CENTER);
+        queueBox.setPrefSize(300, 460);
 
     /********************Playlist View**********************/        
         Label playl = new Label("Playlists");
         playl.setFont(new Font(20));
         playl.setPadding(new Insets(5,0,0,0));
-        VBox list2 = new VBox(playl, playlist);
+        VBox list2 = new VBox(playl, playlistBox);
         list2.setStyle("-fx-border-color: black");
         list2.setStyle("-fx-border-insets: 5");
         list2.setStyle("-fx-border-width: 2");
         list2.setStyle("-fx-border-style: solid inside");
         list2.setMinSize(166, 460);
         list2.setAlignment(Pos.CENTER);
-        playlist.setAlignment(Pos.CENTER);
-        playlist.setPadding(new Insets(20));
-        playlist.setMinSize(166, 460);
+        playlistBox.setAlignment(Pos.TOP_CENTER);
+        playlistBox.setPadding(new Insets(20));
+        playlistBox.setMinSize(166, 460);
         
     /********************Playlist Song View**********************/
         Label sl = new Label("Playlist Songs");
         sl.setFont(new Font(20));
         sl.setPadding(new Insets(5,0,0,0));
-        VBox list3 = new VBox(sl, songlist);
+        VBox list3 = new VBox(sl, PlaylistSongsBox);
         list3.setStyle("-fx-border-color: black");
         list3.setStyle("-fx-border-insets: 5");
         list3.setStyle("-fx-border-width: 2");
         list3.setStyle("-fx-border-style: solid inside");
         list3.setMinSize(166, 460);
         list3.setAlignment(Pos.CENTER);
-        songlist.setAlignment(Pos.CENTER);
-        songlist.setPadding(new Insets(20));
-        songlist.setPrefSize(300, 460);
+        PlaylistSongsBox.setAlignment(Pos.TOP_CENTER);
+        PlaylistSongsBox.setPadding(new Insets(20));
+        PlaylistSongsBox.setPrefSize(300, 460);
     
     /********************Control Bar**********************/
         //Skip Forward Button
@@ -294,17 +294,6 @@ public class OctaveView implements Observer {
         this.stage.show();
     }
     
-    /**
-     * 
-     * @param time 
-     * The Seeker's max value is set to the duration of the current song. This
-     * method allows a clock to increment the seeker forward at set time intervals. 
-     * The time argument is the duration of these intervals, so that the seeker 
-     * remains aligned with the AudioStream. 
-     */
-    public void incrementSeeker() {
-        seek.increment();
-    }
     
     /**
      * Populates the PlaylistSongs stack pane with the song names in the form
@@ -351,7 +340,6 @@ public class OctaveView implements Observer {
                 controller.skipSong();
             }
         }
-        
         MediaPlayer.Status status = stream.getStatus();
         switch (status) {
             case READY:
@@ -396,12 +384,32 @@ public class OctaveView implements Observer {
      */
     private void queueUpdate(Queue q) {
         System.out.println("Updating the view per new data from the queue");
+        
     }
     
     private void playlistUpdate(Playlist p) {
-        System.out.println("Updating the Playlist");
-        // Playlists add a label to the Playlist stack pane. They need a onClick
-        // event listener 
-        
+        String name = p.getName();
+        // If SongList is null, then playlist is new and it needs a label
+        if (p.getSongList() == null){
+            Label l = new Label(name);
+            l.setOnMouseClicked(me -> {
+                if (me.getClickCount() == 2){
+                    controller.loadPlaylist(l.getText());
+                } else if (me.getClickCount() == 1) {
+                    controller.loadPlaylistSongs(l.getText());
+                }
+            });
+            playlistBox.getChildren().add(l);
+            playlists.add(new Label(name));
+            System.out.println("Size of playlists Array in view: " + playlists.size());
+        }
+        // otherwise playlist just read its songs
+        else{
+            playlistSongs = new ArrayList<>();
+            p.getSongList().forEach((s) -> {
+                playlistSongs.add(new Label(s.getName()));
+            });
+            System.out.println("Size of playlistSongs Array: " + playlistSongs.size());
+        }
     }
 }
