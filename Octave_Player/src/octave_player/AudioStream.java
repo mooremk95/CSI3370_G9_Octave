@@ -85,7 +85,10 @@ public class AudioStream implements Observable {
      * songs are added
      */
     public void emptyPlayer() {
-        
+        media = null;
+        mp = null;
+        songName = "";
+        alert();
     }
     // Observable interface methods
     @Override
@@ -167,10 +170,13 @@ public class AudioStream implements Observable {
         // Don't change seek time if argument passed is negative 
         if (Double.compare(time, 0.0) < 0)
             return;
-        Duration seekTime = new Duration(time);
+        // Duration is ctor assumes time in milliseconds
+        Duration seekTime = new Duration(time*1000.0); 
         // Similarly, don't change seek time if time passed is beyond song duration
         if (media.getDuration().compareTo(seekTime) > 1)
             return;
+        System.out.println("Old playback time is: " + 
+                mp.getCurrentTime().toSeconds() + " seconds\n New time: " + seekTime.toSeconds());
         mp.seek(seekTime);
     }
     
