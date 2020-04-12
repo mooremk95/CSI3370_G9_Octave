@@ -80,7 +80,7 @@ public class OctaveView implements Observer {
     
     VBox queueBox = new VBox();
     VBox playlistBox = new VBox();
-    VBox PlaylistSongsBox = new VBox();
+    VBox playlistSongsBox = new VBox();
     
     
     Button pl, pa, f, p, s;
@@ -117,6 +117,7 @@ public class OctaveView implements Observer {
         list1.setMinSize(166, 460);
         list1.setAlignment(Pos.CENTER);
         queueBox.setAlignment(Pos.TOP_CENTER);
+        queueBox.setPadding(new Insets(20));
         queueBox.setPrefSize(300, 460);
 
     /********************Playlist View**********************/        
@@ -138,16 +139,16 @@ public class OctaveView implements Observer {
         Label sl = new Label("Playlist Songs");
         sl.setFont(new Font(20));
         sl.setPadding(new Insets(5,0,0,0));
-        VBox list3 = new VBox(sl, PlaylistSongsBox);
+        VBox list3 = new VBox(sl, playlistSongsBox);
         list3.setStyle("-fx-border-color: black");
         list3.setStyle("-fx-border-insets: 5");
         list3.setStyle("-fx-border-width: 2");
         list3.setStyle("-fx-border-style: solid inside");
         list3.setMinSize(166, 460);
         list3.setAlignment(Pos.CENTER);
-        PlaylistSongsBox.setAlignment(Pos.TOP_CENTER);
-        PlaylistSongsBox.setPadding(new Insets(20));
-        PlaylistSongsBox.setPrefSize(300, 460);
+        playlistSongsBox.setAlignment(Pos.TOP_CENTER);
+        playlistSongsBox.setPadding(new Insets(20));
+        playlistSongsBox.setPrefSize(300, 460);
     
     /********************Control Bar**********************/
         //Skip Forward Button
@@ -299,9 +300,15 @@ public class OctaveView implements Observer {
     /**
      * Populates the PlaylistSongs stack pane with the song names in the form
      * of labels. Existing songs are overwritten.
+     * @param songs 
      */
     public void populatePlaylistSongs(ArrayList<Song> songs) {
-        
+        if (!playlistSongsBox.getChildren().isEmpty()){
+            playlistSongsBox.getChildren().clear();
+        }
+        songs.forEach((song) -> {
+            playlistSongsBox.getChildren().add(new Label(song.getName()));
+        });
     }
     
     
@@ -309,6 +316,7 @@ public class OctaveView implements Observer {
      * 
      * @param o object implementing observable interface. This 
      */
+    @Override
     public void update(Observable o) {
         // Call appropriate update helper method based on object's class name
         String type = o.getClass().getSimpleName();
