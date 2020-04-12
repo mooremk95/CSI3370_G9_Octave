@@ -46,7 +46,19 @@ public class OctaveController {
         
     }
     
+    /**
+     * Searches the playlists via the searchPlaylist driver method. Adds the
+     * Songs in the playlist to the PlaylistsSongs container. This is the 
+     * Container in the view which visually lists the songs in a playlist. 
+     */
+    public void loadPlaylistSongs() {
+        
+    }
     
+    
+    /**
+     * 
+     */
     public void loadNextFromQueue() {
         System.out.println("Loading next from the queue");
         // if queue is not empty, load the next song. 
@@ -136,10 +148,9 @@ public class OctaveController {
     /**
      * 
      * @param seekTime: Time that the user scrolled the playback slider to. 
-     * The Value 
      */
-    public void seekSong(double percentOfSongBar) {
-        
+    public void seekSong(double seekTime) {
+        driver.getStream().setPlayback(seekTime);
     }   
     
     /**

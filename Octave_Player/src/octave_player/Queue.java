@@ -87,4 +87,12 @@ public class Queue implements Observable {
         }
         return false;
     }
+    
+    public String toString(){
+        String string = "Queue";
+        for (Song s:songs){
+            string += "\n\t" + s.getName();
+        }
+        return string;
+    }
 }

@@ -25,6 +25,7 @@ import octave_player.Playlist;
 
 //JavaFX stuff
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.media.Media;
@@ -62,13 +63,12 @@ public class Octave_Player extends Application {
         q = new Queue(mainView);
 	as = new AudioStream(mainView);
         playlists = getPlaylists(mainView); 
-        
         // Replace the songName and file path strings with your own to test
         // the player out. 
-        Song s = new Song("Riders on the Storm",
-                          "C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1971 - L.A.Woman\\The Doors - Riders On The Storm.MP3");
-        as.loadSong(s); // Normally controller would call this when loading the next song in loadNextFromQueue()
-        as.setVolume(0.66); // volume on program startup is 66/
+        Song s = new Song("Break On Through",
+                          "C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1967 - The Doors\\The Doors - Break On Through.MP3");
+        as.loadSong(s);
+        as.setVolume(0.66);
     }
     
     /**

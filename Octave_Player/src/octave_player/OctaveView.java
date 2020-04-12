@@ -55,7 +55,7 @@ public class OctaveView implements Observer {
     private String lastPlaylist;
     private ArrayList<Label> playlists;
     private ArrayList<Label> playlistSongs; // Contains the songs in the selected playlist
-    private boolean isPlaying = true;
+    private boolean isPlaying = false;
     // This clock runs when status is playing. Calls a method to progress the seek bar. 
     private ExecutorService playingClock = Executors.newCachedThreadPool(); 
     
@@ -161,7 +161,13 @@ public class OctaveView implements Observer {
         seek.setMinHeight(50);
         HBox hs = new HBox(seek);
         hs.setAlignment(Pos.CENTER);
+        // stop the scrolling while user mouses down
+        seek.setOnMousePressed(e -> {
+            isPlaying = false;
+        });
         seek.setOnMouseReleased(e -> {
+            isPlaying = true;
+            controller.seekSong(seek.getValue());
             System.out.println("Seek Value: " + seek.getValue());
         });
         
@@ -229,7 +235,8 @@ public class OctaveView implements Observer {
         // clean up the clock on shutdown
         this.stage.setOnCloseRequest(e -> {
             isPlaying = false;
-            playingClock.shutdownNow();
+            playingClock.shutdown();
+            System.exit(0);
         });
         
         
