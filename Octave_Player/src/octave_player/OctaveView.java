@@ -77,6 +77,10 @@ public class OctaveView implements Observer {
     ImageView iv5 = new ImageView(previous);
     ImageView iv6 = new ImageView(stop);
     
+    StackPane queuelist = new StackPane();
+    StackPane playlist = new StackPane();
+    StackPane songlist = new StackPane();
+    
     
     Button pl, pa, f, p, s;
     Slider seek, v;
@@ -101,7 +105,6 @@ public class OctaveView implements Observer {
         c.setAlignment(Pos.CENTER);
         
     /********************Queue View**********************/
-        StackPane queuelist = new StackPane();
         Label queuel = new Label("Queue");
         queuel.setFont(new Font(20));
         queuel.setPadding(new Insets(5,0,0,0));
@@ -116,7 +119,6 @@ public class OctaveView implements Observer {
         queuelist.setPrefSize(300, 460);
 
     /********************Playlist View**********************/        
-        StackPane playlist = new StackPane();
         Label playl = new Label("Playlists");
         playl.setFont(new Font(20));
         playl.setPadding(new Insets(5,0,0,0));
@@ -132,7 +134,6 @@ public class OctaveView implements Observer {
         playlist.setMinSize(166, 460);
         
     /********************Playlist Song View**********************/
-        StackPane songlist = new StackPane();
         Label sl = new Label("Playlist Songs");
         sl.setFont(new Font(20));
         sl.setPadding(new Insets(5,0,0,0));
@@ -398,7 +399,7 @@ public class OctaveView implements Observer {
     }
     
     private void playlistUpdate(Playlist p) {
-        System.out.println("Updating the ");
+        System.out.println("Updating the Playlist");
         // Playlists add a label to the Playlist stack pane. They need a onClick
         // event listener 
         
