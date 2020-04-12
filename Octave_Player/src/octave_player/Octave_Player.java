@@ -66,6 +66,7 @@ public class Octave_Player extends Application {
         as.attach(mainView);
         playlists = getPlaylists(mainView); // Playlists attached as created
 
+
         // Testing createPlaylist
         controller.playlistCreation();
         System.out.println(playlists.get(playlists.size()-1));
