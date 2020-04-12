@@ -56,7 +56,8 @@ public class AudioStream implements Observable {
                 System.out.println("\nEnd of Media status: " + mp.getStatus() 
                         + "\nPlayback Time:" +mp.getCurrentTime() 
                         + "\nDuration: " + mp.getCycleDuration());
-                alert(); });
+                alert(); 
+            });
             return true;
         }
         // othwrwise set them to null, return false
@@ -108,8 +109,11 @@ public class AudioStream implements Observable {
     }
     
     public boolean songEnded() {
-        if (mp != null)
-            return mp.getCurrentTime() == mp.getCycleDuration();
+        if (mp != null){
+            int result = Double.compare(mp.getCurrentTime().toSeconds(), 
+                                            mp.getCycleDuration().toSeconds());
+            return 0 ==  result;
+        }
         return false;
     }
     
