@@ -65,10 +65,10 @@ public class Octave_Player extends Application {
         playlists = getPlaylists(mainView); 
         // Replace the songName and file path strings with your own to test
         // the player out. 
-        Song s = new Song("Break On Through",
-                          "C:\\Users\\Mike\\Music\\The Doors - STUDIO DISCOGRAPHY\\1967 - The Doors\\The Doors - Break On Through.MP3");
-        as.loadSong(s);
-        as.setVolume(0.66);
+        Song s = new Song("You Shook Me All Night Long",
+                          "C:\\Users\\ttoyr\\Desktop\\You Shook Me All Night Long.MP3");
+        as.loadSong(s); // Normally controller would call this when loading the next song in loadNextFromQueue()
+        as.setVolume(0.66); // volume on program startup is 66/
     }
     
     /**
@@ -153,6 +153,17 @@ public class Octave_Player extends Application {
     }
     
     public Playlist searchPlaylists(String name){
+        for(int i = 0; i < playlists.size(); i++)
+        {
+            if(playlists.get(i).getName().equals(name))
+            {
+                return playlists.get(i);
+            }
+            else
+            {
+                System.out.println("Selected playlist not found by searchPlaylists method");
+            }
+        }
         return null;
     }
     
