@@ -85,7 +85,10 @@ public class AudioStream implements Observable {
      * songs are added
      */
     public void emptyPlayer() {
-        
+        media = null;
+        mp = null;
+        songName = "";
+        alert();
     }
     // Observable interface methods
     @Override

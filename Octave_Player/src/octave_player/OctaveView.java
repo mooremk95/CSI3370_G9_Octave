@@ -292,6 +292,17 @@ public class OctaveView implements Observer {
      * - if Son
      */
     private void audioStreamUpdate(AudioStream stream){
+        if (stream.getStatus() == null){
+            if (stream.getSongName().equals("")) {
+                isPlaying = false;
+                seek.setValue(0.0);
+            } else{
+                System.out.println("Entered an error state");
+                //Attempt to skip the song
+                controller.skipSong();
+            }
+        }
+        
         MediaPlayer.Status status = stream.getStatus();
         switch (status) {
             case READY:
