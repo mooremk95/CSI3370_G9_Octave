@@ -29,6 +29,7 @@ public class Queue implements Observable {
     
     public Queue(Observer o) {
         attach(o);
+        songs = new ArrayList<Song>();
         // create empty arrayList
     }
     
@@ -56,6 +57,7 @@ public class Queue implements Observable {
      * @param song 
      */
     public void addToQueue(Song song) {
+        songs.add(song);
 
     }
     /**
@@ -70,6 +72,9 @@ public class Queue implements Observable {
      * @return Oldest song in the queue
      */
     public Song popFromQueue() {
+        if( songs.size() > 0 ){
+            return songs.remove(0);
+        }
         return null;
     }
     
@@ -77,6 +82,17 @@ public class Queue implements Observable {
      * 
      */
     public boolean hasNext() {
+        if(songs.size()-1 > 0){
+            return true;
+        }
         return false;
+    }
+    
+    public String toString(){
+        String string = "Queue";
+        for (Song s:songs){
+            string += "\n\t" + s.getName();
+        }
+        return string;
     }
 }

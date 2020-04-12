@@ -38,6 +38,8 @@ import java.lang.InterruptedException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 
 /**
  *
@@ -55,7 +57,7 @@ public class OctaveView implements Observer {
     private String lastPlaylist;
     private ArrayList<Label> playlists;
     private ArrayList<Label> playlistSongs; // Contains the songs in the selected playlist
-    private boolean isPlaying = true;
+    private boolean isPlaying = false;
     // This clock runs when status is playing. Calls a method to progress the seek bar. 
     private ExecutorService playingClock = Executors.newCachedThreadPool(); 
     
@@ -93,15 +95,58 @@ public class OctaveView implements Observer {
     /********************Currently Playing**********************/     
         current = new Label("Now Playing:"); // changed this label to a data member so update can change it 
         current.setFont(new Font(25));
+        current.setPadding(new Insets(0,0,10,0));
       
         HBox c = new HBox(current);
         c.setAlignment(Pos.CENTER);
+        
+    /********************Queue View**********************/
+        StackPane queuelist = new StackPane();
+        Label queuel = new Label("Queue");
+        queuel.setFont(new Font(20));
+        queuel.setPadding(new Insets(5,0,0,0));
+        VBox list1 = new VBox(queuel, queuelist);
+        list1.setStyle("-fx-border-color: black");
+        list1.setStyle("-fx-border-insets: 5");
+        list1.setStyle("-fx-border-width: 2");
+        list1.setStyle("-fx-border-style: solid inside");
+        list1.setMinSize(166, 460);
+        list1.setAlignment(Pos.CENTER);
+        queuelist.setAlignment(Pos.CENTER);
+        queuelist.setPrefSize(300, 460);
 
     /********************Playlist View**********************/        
         StackPane playlist = new StackPane();
+        Label playl = new Label("Playlists");
+        playl.setFont(new Font(20));
+        playl.setPadding(new Insets(5,0,0,0));
+        VBox list2 = new VBox(playl, playlist);
+        list2.setStyle("-fx-border-color: black");
+        list2.setStyle("-fx-border-insets: 5");
+        list2.setStyle("-fx-border-width: 2");
+        list2.setStyle("-fx-border-style: solid inside");
+        list2.setMinSize(166, 460);
+        list2.setAlignment(Pos.CENTER);
         playlist.setAlignment(Pos.CENTER);
         playlist.setPadding(new Insets(20));
+        playlist.setMinSize(166, 460);
         
+    /********************Playlist Song View**********************/
+        StackPane songlist = new StackPane();
+        Label sl = new Label("Playlist Songs");
+        sl.setFont(new Font(20));
+        sl.setPadding(new Insets(5,0,0,0));
+        VBox list3 = new VBox(sl, songlist);
+        list3.setStyle("-fx-border-color: black");
+        list3.setStyle("-fx-border-insets: 5");
+        list3.setStyle("-fx-border-width: 2");
+        list3.setStyle("-fx-border-style: solid inside");
+        list3.setMinSize(166, 460);
+        list3.setAlignment(Pos.CENTER);
+        songlist.setAlignment(Pos.CENTER);
+        songlist.setPadding(new Insets(20));
+        songlist.setPrefSize(300, 460);
+    
     /********************Control Bar**********************/
         //Skip Forward Button
         f = new Button();
@@ -161,7 +206,13 @@ public class OctaveView implements Observer {
         seek.setMinHeight(50);
         HBox hs = new HBox(seek);
         hs.setAlignment(Pos.CENTER);
+        // stop the scrolling while user mouses down
+        seek.setOnMousePressed(e -> {
+            isPlaying = false;
+        });
         seek.setOnMouseReleased(e -> {
+            isPlaying = true;
+            controller.seekSong(seek.getValue());
             System.out.println("Seek Value: " + seek.getValue());
         });
         
@@ -205,13 +256,16 @@ public class OctaveView implements Observer {
         gp.addColumn(0, vb);
         gp.add(hs, 2, 2);
         
-        
+    
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: lightgrey");
+        root.setPrefHeight(460);
         root.setPadding(new Insets(20));
         root.setBottom(gp);
         root.setTop(c);
-        root.setCenter(playlist);
+        root.setCenter(list2);
+        root.setLeft(list1);
+        root.setRight(list3);
         
         // Set up the clock which increments the seeker
         seek.setBlockIncrement(0.50);
@@ -229,7 +283,8 @@ public class OctaveView implements Observer {
         // clean up the clock on shutdown
         this.stage.setOnCloseRequest(e -> {
             isPlaying = false;
-            playingClock.shutdownNow();
+            playingClock.shutdown();
+            System.exit(0);
         });
         
         
@@ -285,6 +340,17 @@ public class OctaveView implements Observer {
      * - if Son
      */
     private void audioStreamUpdate(AudioStream stream){
+        if (stream.getStatus() == null){
+            if (stream.getSongName().equals("")) {
+                isPlaying = false;
+                seek.setValue(0.0);
+            } else{
+                System.out.println("Entered an error state");
+                //Attempt to skip the song
+                controller.skipSong();
+            }
+        }
+        
         MediaPlayer.Status status = stream.getStatus();
         switch (status) {
             case READY:
