@@ -39,19 +39,21 @@ public class OctaveController {
     }
     
     /**
+     * @param songName
      * Searches the playlists via the searchPlaylist driver method. Adds this
      * playlist to the Queue.
      */
-    public void loadPlaylist() {
+    public void loadPlaylist(String songName) {
         
     }
     
     /**
+     * @param songName
      * Searches the playlists via the searchPlaylist driver method. Adds the
      * Songs in the playlist to the PlaylistsSongs container. This is the 
      * Container in the view which visually lists the songs in a playlist. 
      */
-    public void loadPlaylistSongs() {
+    public void loadPlaylistSongs(String songName) {
         
     }
     
