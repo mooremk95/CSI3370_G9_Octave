@@ -136,18 +136,6 @@ public class AudioStream implements Observable {
             
     }
     /**
-     * Toggles mute. Switches the mute state of the player on/off
-     */
-    public void toggleMute() {
-        if (mp == null)
-            return;
-        if (mp.isMute()){
-            mp.setMute(false);
-        }
-        else
-            mp.setMute(true);
-    }
-    /**
      * 
      * @param value : Value to change volume by %. May range from 0.0 to 1.0 
      * If the value is within the range of 0.0 and 1.0 then the volume is 

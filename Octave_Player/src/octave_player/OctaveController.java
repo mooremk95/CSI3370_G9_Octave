@@ -39,33 +39,41 @@ public class OctaveController {
     }
     
     /**
-     * @param songName
+     * @param playlistName
      * Searches the playlists via the searchPlaylist driver method. Adds this
      * playlist to the Queue.
      */
-    public void loadPlaylist(String songName) {
-        
+    public void loadPlaylist(String playlistName) {
+        System.out.println("I'd have loaded the playlist: " + playlistName + 
+                "Onto the Queue");
     }
     
     /**
-     * @param songName
+     * @param playlistName
      * Searches the playlists via the searchPlaylist driver method. Adds the
      * Songs in the playlist to the PlaylistsSongs container. This is the 
      * Container in the view which visually lists the songs in a playlist. 
      */
-    public void loadPlaylistSongs(String songName) {
-        
+    public void loadPlaylistSongs(String playlistName) {
+        System.out.println("I'd have loaded the songs in Playlist " 
+                + playlistName + 
+                "Into the Playlist Songs VBox");
     }
     
     
     /**
-     * 
+     * This can be implemented using queue's pop method and the 
      */
     public void loadNextFromQueue() {
         System.out.println("Loading next from the queue");
         // if queue is not empty, load the next song. 
     }
     
+    /**
+     * If the audiostream is in the proper state, this will change it's state 
+     * to play. Calls alert if it's in a halted state, so the model alerts the
+     * view of it's inability to stream.
+     */
     public void setStatusPlay() {
         AudioStream stream = driver.getStream();
         if (stream == null)
@@ -88,6 +96,11 @@ public class OctaveController {
                 stream.alert();
         }
     }
+     /**
+     * If the audiostream is in the proper state, this will change it's state 
+     * to paused. Calls alert if it's in a halted state, so the model alerts the
+     * view of it's inability to stream.
+     */
     public void setStatusPaused() {
         AudioStream stream = driver.getStream();
         if (stream == null)
