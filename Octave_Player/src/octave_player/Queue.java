@@ -58,7 +58,7 @@ public class Queue implements Observable {
      */
     public void addToQueue(Song song) {
         songs.add(song);
-
+        alert();
     }
     /**
      * 
@@ -73,7 +73,10 @@ public class Queue implements Observable {
      */
     public Song popFromQueue() {
         if( songs.size() > 0 ){
-            return songs.remove(0);
+            Song s = songs.get(0);
+            songs.remove(0);
+            alert();
+            return s;
         }
         return null;
     }
