@@ -12,9 +12,7 @@ import octave_player.Observer;
 import java.lang.String;
 
 //Containers
-import javafx.util.Pair;
 import java.util.ArrayList;
-import javafx.util.Pair; // Songs are pairs of strings
 
 /**
  *
@@ -26,22 +24,44 @@ import javafx.util.Pair; // Songs are pairs of strings
  */
 public class Queue implements Observable {
     private Observer observer = null;
+    private ArrayList<Song> Songs; 
     
     
     public Queue(Observer o) {
         attach(o);
     }
     
+    // observable methods
+            
+    @Override
     public void attach(Observer o) {
         observer = o;
     }
     
+    @Override    
     public void detach(Observer o) {
         observer = null;
     }
     
+    @Override      
     public void alert() {
         if (observer != null)
             observer.update(this);
+    }
+    
+    // Main Funcitons 
+    /**
+     * Adds song to the Queue's ArraayList
+     * @param song 
+     */
+    public void addToQueue(Song song) {
+        
+    }
+    /**
+     * Returns the oldest song in the queue. 
+     * @return Oldest song in the queue
+     */
+    public Song popFromQueue() {
+        return null;
     }
 }
