@@ -85,7 +85,7 @@ public class Queue implements Observable {
      * 
      */
     public boolean hasNext() {
-        if(songs.size()-1 > 0){
+        if(songs.size() > 0){
             return true;
         }
         return false;

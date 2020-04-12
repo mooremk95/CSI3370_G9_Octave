@@ -38,6 +38,7 @@ import java.lang.InterruptedException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javafx.event.EventType;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 
@@ -339,6 +340,7 @@ public class OctaveView implements Observer {
                 //Attempt to skip the song
                 controller.skipSong();
             }
+            return;
         }
         MediaPlayer.Status status = stream.getStatus();
         switch (status) {
@@ -384,7 +386,15 @@ public class OctaveView implements Observer {
      */
     private void queueUpdate(Queue q) {
         System.out.println("Updating the view per new data from the queue");
-        
+        // If queue's size is bigger, it has a new song
+        if (q.getSongs().size() > queueBox.getChildren().size()){
+            int size = q.getSongs().size();
+            Label l = new Label(q.getSongs().get(size-1).getName());
+            queueBox.getChildren().add(l);
+        } // or if Queue is smaller than the queueBox's # of children
+        else if (q.getSongs().size() < queueBox.getChildren().size()) {
+            queueBox.getChildren().remove(0);
+        }
     }
     
     private void playlistUpdate(Playlist p) {

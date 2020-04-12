@@ -62,7 +62,9 @@ public class OctaveController {
     
     
     /**
-     * This can be implemented using queue's pop method and the 
+     * This can be implemented using queue's pop method and the AudioStream's
+     * loadSong
+     * 
      */
     public void loadNextFromQueue() {
         System.out.println("Loading next from the queue");
