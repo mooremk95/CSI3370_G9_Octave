@@ -79,6 +79,14 @@ public class AudioStream implements Observable {
         }
         
     }
+    /**
+     * Sets the mediaPlayer and media to null. This state indicates that no 
+     * songs are in the Queue, and that the player is ready to play whenever 
+     * songs are added
+     */
+    public void emptyPlayer() {
+        
+    }
     // Observable interface methods
     @Override
     public void attach(Observer o)

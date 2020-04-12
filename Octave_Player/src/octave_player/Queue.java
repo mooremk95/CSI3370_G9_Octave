@@ -24,11 +24,12 @@ import java.util.ArrayList;
  */
 public class Queue implements Observable {
     private Observer observer = null;
-    private ArrayList<Song> Songs; 
+    private ArrayList<Song> songs = null; 
     
     
     public Queue(Observer o) {
         attach(o);
+        // create empty arrayList
     }
     
     // observable methods
@@ -55,13 +56,27 @@ public class Queue implements Observable {
      * @param song 
      */
     public void addToQueue(Song song) {
-        
+
     }
+    /**
+     * 
+     */
+    public ArrayList<Song> getSongs() {
+        return songs;
+    }
+    
     /**
      * Returns the oldest song in the queue. 
      * @return Oldest song in the queue
      */
     public Song popFromQueue() {
         return null;
+    }
+    
+    /**
+     * 
+     */
+    public boolean hasNext() {
+        return false;
     }
 }

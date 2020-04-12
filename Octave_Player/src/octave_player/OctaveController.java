@@ -38,6 +38,15 @@ public class OctaveController {
         driver = mainInstance;
     }
     
+    /**
+     * Searches the playlists via the searchPlaylist driver method. Adds this
+     * playlist to the Queue.
+     */
+    public void loadPlaylist() {
+        
+    }
+    
+    
     public void loadNextFromQueue() {
         System.out.println("Loading next from the queue");
         // if queue is not empty, load the next song. 
@@ -132,7 +141,24 @@ public class OctaveController {
     public void seekSong(double percentOfSongBar) {
         
     }   
-
-    // N
+    
+    /**
+     * Attempts to skip the Current song and begin playing the next
+     *  - if no more songs in queue, then empty they AudioStream and set the 
+     *   seeker to 0
+     * - otherwise pop the next song off the queue, and load that into the 
+     *  audioStream.
+     */
+    public void skipSong(){
+        
+    }
+    
+    /**
+     * Re-plays the currently playing song. This can be implemented by calling 
+     * the stop() and play() methods sequentially on the audioStream.
+     */
+    public void replay() {
+        
+    }
     
 }

@@ -38,6 +38,7 @@ import javafx.stage.Stage;
  */
 public class Octave_Player extends Application {
     private ArrayList<Playlist> playlists;
+    // private Playlist allSongs;
     private AudioStream as;
     private Queue q;
     private OctaveView mainView;
@@ -149,6 +150,10 @@ public class Octave_Player extends Application {
         } else {
             // Call view, alert playlist to delete DNE
         }
+    }
+    
+    public Playlist searchPlaylists(String name){
+        return null;
     }
     
     // getters

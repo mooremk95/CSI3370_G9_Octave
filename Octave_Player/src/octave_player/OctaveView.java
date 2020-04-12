@@ -52,6 +52,9 @@ public class OctaveView implements Observer {
     private OctaveController controller;
     private MediaView mv = new MediaView();
     private String playingSongName = "";
+    private String lastPlaylist;
+    private ArrayList<Label> playlists;
+    private ArrayList<Label> playlistSongs; // Contains the songs in the selected playlist
     private boolean isPlaying = true;
     // This clock runs when status is playing. Calls a method to progress the seek bar. 
     private ExecutorService playingClock = Executors.newCachedThreadPool(); 
@@ -90,7 +93,7 @@ public class OctaveView implements Observer {
     /********************Currently Playing**********************/     
         current = new Label("Now Playing:"); // changed this label to a data member so update can change it 
         current.setFont(new Font(25));
-        
+      
         HBox c = new HBox(current);
         c.setAlignment(Pos.CENTER);
 
@@ -107,7 +110,7 @@ public class OctaveView implements Observer {
         iv4.setFitWidth(60);
         
         f.setOnAction(e -> {
-            
+            controller.skipSong();
         });
         
         //Play Button
@@ -140,9 +143,7 @@ public class OctaveView implements Observer {
             controller.setStatusStopped();
         });
         
-        // Note: Not sure we can implement this feature
-        // Queue class is designed to funciton as a true queue, and songs are 
-        // removed once they have been played or skipped
+        // Note: Change this to re-play song button
         //Skip to Previous Button
         p = new Button();
         p.setGraphic(iv5);
@@ -150,9 +151,8 @@ public class OctaveView implements Observer {
         iv5.setFitWidth(60);
         
         p.setOnAction(e -> {
-            
+            controller.replay();
         });
-        
         
         
         //Seek Slider
@@ -229,7 +229,7 @@ public class OctaveView implements Observer {
         // clean up the clock on shutdown
         this.stage.setOnCloseRequest(e -> {
             isPlaying = false;
-            playingClock.shutdown();
+            playingClock.shutdownNow();
         });
         
         
@@ -251,6 +251,15 @@ public class OctaveView implements Observer {
     }
     
     /**
+     * Populates the PlaylistSongs stack pane with the song names in the form
+     * of labels. Existing songs are overwritten.
+     */
+    public void populatePlaylistSongs(ArrayList<Song> songs) {
+        
+    }
+    
+    
+    /**
      * 
      * @param o object implementing observable interface. This 
      */
@@ -269,6 +278,8 @@ public class OctaveView implements Observer {
         }
        
     }
+    
+    
     /**
      * @param stream: reference to the stream which we are updating. 
      * - if Son
@@ -280,7 +291,7 @@ public class OctaveView implements Observer {
                 System.out.println("AudioStream is ready");
                 // oh, it's a new song
                 playingSongName = stream.getSongName();
-                current.setText("Now Playing " + playingSongName);
+                current.setText("Now Playing: " + playingSongName);
                 //move the playback slider to position 0 (min position)
                 seek.setValue(0.0);
                 // Set the max seek value to the number of seconds in the song
@@ -322,5 +333,8 @@ public class OctaveView implements Observer {
     
     private void playlistUpdate(Playlist p) {
         System.out.println("Updating the ");
+        // Playlists add a label to the Playlist stack pane. They need a onClick
+        // event listener 
+        
     }
 }
