@@ -65,9 +65,9 @@ public class Octave_Player extends Application {
         playlists = getPlaylists(mainView); 
         // Replace the songName and file path strings with your own to test
         // the player out. 
-        Song s = new Song("You Shook Me All Night Long",
-                          "C:\\Users\\ttoyr\\Desktop\\You Shook Me All Night Long.MP3");
-        as.loadSong(s); // Normally controller would call this when loading the next song in loadNextFromQueue()
+        Song s = new Song("You Shook Me All Night Long", "C:\\Users\\NVala\\Desktop\\countrySong.mp3");
+        q.addToQueue(s);
+        as.loadSong(s);// Normally controller would call this when loading the next song in loadNextFromQueue()
         as.setVolume(0.66); // volume on program startup is 66/
     }
     

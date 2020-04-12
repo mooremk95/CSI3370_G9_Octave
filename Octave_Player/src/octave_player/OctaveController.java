@@ -166,12 +166,15 @@ public class OctaveController {
         if(q.hasNext())
         {
             Song nextSong = q.popFromQueue();
+            stream.stop();
             stream.loadSong(nextSong);
             stream.play();
         }
         else{
+            stream.stop();
             stream.emptyPlayer();
-        }             
+        }     
+        stream.alert();
     }
     
     /**
@@ -184,6 +187,7 @@ public class OctaveController {
             return;
         stream.stop();
         stream.play();
+        stream.alert();
     }
     
 }
