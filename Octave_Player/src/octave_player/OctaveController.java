@@ -161,7 +161,20 @@ public class OctaveController {
      *  audioStream.
      */
     public void skipSong(){
-        
+        Queue q = driver.getQueue();
+        AudioStream stream = driver.getStream();
+        if(q.hasNext())
+        {
+            Song nextSong = q.popFromQueue();
+            stream.stop();
+            stream.loadSong(nextSong);
+            stream.play();
+        }
+        else{
+            stream.stop();
+            stream.emptyPlayer();
+        }     
+        stream.alert();
     }
     
     /**
@@ -169,7 +182,12 @@ public class OctaveController {
      * the stop() and play() methods sequentially on the audioStream.
      */
     public void replay() {
-        
+        AudioStream stream = driver.getStream();
+        if (stream == null)
+            return;
+        stream.stop();
+        stream.play();
+        stream.alert();
     }
     
 }
