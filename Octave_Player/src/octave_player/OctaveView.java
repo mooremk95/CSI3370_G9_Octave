@@ -56,7 +56,6 @@ public class OctaveView implements Observer {
     private MediaView mv = new MediaView();
     private String playingSongName = "";
     private String lastPlaylist;
-    private ArrayList<Label> playlists = new ArrayList<>();
     private ArrayList<Label> playlistSongs = new ArrayList<>(); // Contains the songs in the selected playlist
     private boolean isPlaying = false;
     // This clock runs when status is playing. Calls a method to progress the seek bar. 
@@ -411,15 +410,14 @@ public class OctaveView implements Observer {
         if (p.getSongList() == null){
             Label l = new Label(name);
             l.setOnMouseClicked(me -> {
-                if (me.getClickCount() == 2){
-                    controller.loadPlaylist(l.getText());
-                } else if (me.getClickCount() == 1) {
+                System.out.println("Click Count" + me.getClickCount());
+                if (me.getClickCount() == 1){
                     controller.loadPlaylistSongs(l.getText());
+                } else {
+                    controller.loadPlaylist(l.getText());
                 }
             });
             playlistBox.getChildren().add(l);
-            playlists.add(new Label(name));
-            System.out.println("Size of playlists Array in view: " + playlists.size());
         }
         // otherwise playlist just read its songs
         else{
@@ -427,7 +425,6 @@ public class OctaveView implements Observer {
             p.getSongList().forEach((s) -> {
                 playlistSongs.add(new Label(s.getName()));
             });
-            System.out.println("Size of playlistSongs Array: " + playlistSongs.size());
         }
     }
 }

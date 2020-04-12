@@ -68,7 +68,10 @@ public class OctaveController {
      */
     public void loadNextFromQueue() {
         System.out.println("Loading next from the queue");
-        // if queue is not empty, load the next song. 
+        Queue q = driver.getQueue();
+        if (q.hasNext()){
+            driver.getStream().loadSong(q.popFromQueue());
+        }
     }
     
     /**
@@ -204,7 +207,6 @@ public class OctaveController {
             return;
         stream.stop();
         stream.play();
-        stream.alert();
     }
     
 }
